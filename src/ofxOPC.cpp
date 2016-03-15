@@ -24,7 +24,7 @@ void ofxOPC::setup(string address, int port)
     connect();
     
     // Determine the length of the data section, as a multiple of the SPCData type
-    uint16_t data_length = 8 * 64 * sizeof(OPCPacket_SPCData_t);
+    uint16_t data_length = 8 * 64 * sizeof(OPCPacket_SPCData_t) * 1000; //oriol's hack to play ti safe
     
     // Add the header-section's length to the data-section's to determine the total packet length; allocate the packet
     OPC_SPC_packet_length = sizeof(OPCPacket_Header_t) + data_length;
@@ -214,6 +214,24 @@ void ofxOPC::writeChannelEight(vector<ofColor>pix)
 {
     writeChannel(CHANNEL_EIGHT, pix);
 }
+
+void ofxOPC::writeChannelZero(vector <ofColor> pix){
+
+	OPC_SPC_packet->header.channel = 0x00;
+	OPC_SPC_packet->header.command = 0x00; // Set Pixel Colour
+	int numBytes = pix.size() * 3;
+	OPC_SPC_packet->header.data_length = htons(numBytes); // Convert the 16bit number into two bytes (High-, then Low-byte)
+	
+
+	for (unsigned int i = 0; i < pix.size(); i++) {
+		OPC_SPC_packet_data[i].r = pix[i].r;
+		OPC_SPC_packet_data[i].g = pix[i].g;
+		OPC_SPC_packet_data[i].b = pix[i].b;
+	}
+
+	client.sendRawBytes((char *)(OPC_SPC_packet), numBytes + 4 /*header*/);
+}
+
 //--------------------------------------------------------------
 void ofxOPC::writeChannel(uint8_t channel, vector<ofColor>pix)
 {

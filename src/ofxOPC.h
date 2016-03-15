@@ -86,6 +86,10 @@ class ofxOPC  {
         void writeChannelSix(vector <ofColor> pix);
         void writeChannelSeven(vector <ofColor> pix);
         void writeChannelEight(vector <ofColor> pix);
+	
+		void writeChannelZero(vector <ofColor> pix);
+	
+	
     
     
         // Function to Chain the data together
