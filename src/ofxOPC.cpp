@@ -224,9 +224,9 @@ void ofxOPC::writeChannelZero(vector <ofColor> pix){
 	
 
 	for (unsigned int i = 0; i < pix.size(); i++) {
-		OPC_SPC_packet_data[i].r = pix[i].r;
-		OPC_SPC_packet_data[i].g = pix[i].g;
-		OPC_SPC_packet_data[i].b = pix[i].b;
+		OPC_SPC_packet_data[i].r = pix[i].b; //note the shift in mapping! 
+		OPC_SPC_packet_data[i].g = pix[i].r;
+		OPC_SPC_packet_data[i].b = pix[i].g;
 	}
 
 	client.sendRawBytes((char *)(OPC_SPC_packet), numBytes + 4 /*header*/);
